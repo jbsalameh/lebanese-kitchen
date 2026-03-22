@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="#1B4332"/>
+
+  <!-- Pot body -->
+  <rect x="138" y="228" width="236" height="172" rx="22" fill="#F5F0E8"/>
+
+  <!-- Pot lid -->
+  <rect x="118" y="190" width="276" height="50" rx="14" fill="#F5F0E8"/>
+
+  <!-- Lid knob -->
+  <rect x="220" y="158" width="72" height="40" rx="12" fill="#F5F0E8"/>
+
+  <!-- Handles -->
+  <rect x="86" y="228" width="52" height="30" rx="15" fill="#F5F0E8"/>
+  <rect x="374" y="228" width="52" height="30" rx="15" fill="#F5F0E8"/>
+
+  <!-- Steam - warm gold -->
+  <path d="M200 158 Q214 124 200 90" stroke="#D4A853" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <path d="M256 152 Q270 118 256 84" stroke="#D4A853" stroke-width="18" fill="none" stroke-linecap="round"/>
+  <path d="M312 158 Q326 124 312 90" stroke="#D4A853" stroke-width="18" fill="none" stroke-linecap="round"/>
+
+  <!-- Sprig / herb on pot (decorative) -->
+  <circle cx="256" cy="322" r="28" fill="#2D6A4F" opacity="0.5"/>
+  <path d="M256 350 Q240 322 256 294 Q272 322 256 350" fill="#52B788"/>
+  <path d="M238 340 Q228 318 246 304" stroke="#52B788" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M274 340 Q284 318 266 304" stroke="#52B788" stroke-width="5" fill="none" stroke-linecap="round"/>
+</svg>
