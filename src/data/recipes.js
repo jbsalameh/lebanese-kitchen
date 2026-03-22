@@ -24,7 +24,7 @@ export const categories = [
 export const recipes = [
   {
     id: 1,
-    name: 'Baked Kibbeh',
+    name: 'Kibbeh bil Sayniyeh',
     nameAr: 'كبة بالصينية',
     category: 'main',
     prepTime: 30,
@@ -161,7 +161,7 @@ export const recipes = [
   },
   {
     id: 4,
-    name: 'Grilled Marinated Chicken',
+    name: 'Djej Mashwi',
     nameAr: 'دجاج مشوي',
     category: 'main',
     prepTime: 15,
@@ -347,7 +347,7 @@ export const recipes = [
   },
   {
     id: 8,
-    name: 'White Bean Stew',
+    name: 'Fasoulia bil Zeit',
     nameAr: 'فاصوليا بالزيت',
     category: 'main',
     prepTime: 10,
@@ -393,7 +393,7 @@ export const recipes = [
   },
   {
     id: 9,
-    name: 'Pea & Beef Stew',
+    name: 'Bazella w Riz',
     nameAr: 'بازيلا ورز',
     category: 'main',
     prepTime: 15,
@@ -438,7 +438,7 @@ export const recipes = [
   },
   {
     id: 10,
-    name: 'Green Bean Stew',
+    name: 'Loubieh bil Zeit',
     nameAr: 'لوبية بالزيت',
     category: 'main',
     prepTime: 15,
@@ -480,7 +480,7 @@ export const recipes = [
   },
   {
     id: 11,
-    name: 'Chicken Livers with Pomegranate',
+    name: 'Sawda bil Remman',
     nameAr: 'صوادي بالرمان',
     category: 'main',
     prepTime: 10,
@@ -570,7 +570,7 @@ export const recipes = [
   },
   {
     id: 13,
-    name: 'Braised Lamb with Vegetables',
+    name: 'Lahm bil Khodar',
     nameAr: 'لحم بالخضار',
     category: 'main',
     prepTime: 20,
@@ -616,7 +616,7 @@ export const recipes = [
   },
   {
     id: 14,
-    name: 'Lebanese Rice',
+    name: 'Riz bi Sh\'arieh',
     nameAr: 'رز بالشعيرية',
     category: 'rice',
     prepTime: 5,
@@ -1045,7 +1045,7 @@ export const recipes = [
   },
   {
     id: 24,
-    name: 'Lemon Lentil Soup',
+    name: 'Adas bil Hamod',
     nameAr: 'عدس بالحامض',
     category: 'soup',
     prepTime: 10,
@@ -1131,7 +1131,7 @@ export const recipes = [
   },
   {
     id: 26,
-    name: 'Lebanese Chicken Soup',
+    name: 'Shorbet Djej',
     nameAr: 'شوربة دجاج',
     category: 'soup',
     prepTime: 15,
@@ -1177,7 +1177,7 @@ export const recipes = [
   },
   {
     id: 27,
-    name: 'Zaatar Manakish',
+    name: 'Manakish bil Zaatar',
     nameAr: 'مناقيش زعتر',
     category: 'breakfast',
     prepTime: 90,
@@ -1310,7 +1310,7 @@ export const recipes = [
   },
   {
     id: 30,
-    name: 'Spinach Pies',
+    name: 'Fattayer bil Sabanekh',
     nameAr: 'فطاير السبانخ',
     category: 'breakfast',
     prepTime: 60,
@@ -1356,7 +1356,7 @@ export const recipes = [
   },
   {
     id: 31,
-    name: 'Lebanese Salad',
+    name: 'Salata Lubnaniyeh',
     nameAr: 'سلطة لبنانية',
     category: 'salad',
     prepTime: 15,
@@ -1398,7 +1398,7 @@ export const recipes = [
   },
   {
     id: 32,
-    name: 'Rocca Salad',
+    name: 'Salata Jarjir',
     nameAr: 'سلطة الجرجير',
     category: 'salad',
     prepTime: 10,
@@ -1670,7 +1670,7 @@ export const recipes = [
   },
   {
     id: 38,
-    name: 'Kafta & Potato Bake',
+    name: 'Kafta w Batata bil Sayniyeh',
     nameAr: 'كفتة وبطاطا بالصينية',
     category: 'main',
     prepTime: 20,
@@ -1716,7 +1716,7 @@ export const recipes = [
   },
   {
     id: 39,
-    name: 'Lebanese Potato Bake',
+    name: 'Batata bil Sayniyeh',
     nameAr: 'بطاطا بالصينية',
     category: 'main',
     prepTime: 25,
@@ -1764,7 +1764,7 @@ export const recipes = [
   },
   {
     id: 40,
-    name: 'Chicken & Potato Bake',
+    name: 'Djej w Batata bil Sayniyeh',
     nameAr: 'دجاج وبطاطا بالصينية',
     category: 'main',
     prepTime: 20,
@@ -1810,7 +1810,7 @@ export const recipes = [
   },
   {
     id: 41,
-    name: 'Spinach & Beef Stew',
+    name: 'Yakhnet Sabanekh',
     nameAr: 'يخنة سبانخ',
     category: 'main',
     prepTime: 15,
@@ -1855,7 +1855,7 @@ export const recipes = [
   },
   {
     id: 42,
-    name: 'Fish in Tahini Sauce',
+    name: 'Samak bil Tahini',
     nameAr: 'سمك بالطحينة',
     category: 'main',
     prepTime: 15,
