@@ -18,6 +18,12 @@ export default function App() {
   const [checkedItems, setCheckedItems] = useState(() => {
     try { return JSON.parse(localStorage.getItem('checkedItems')) || {} } catch { return {} }
   })
+  const [favorites, setFavorites] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('favorites')) || [] } catch { return [] }
+  })
+  const [recentlyViewed, setRecentlyViewed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('recentlyViewed')) || [] } catch { return [] }
+  })
 
   useEffect(() => {
     localStorage.setItem('weeklyPlan', JSON.stringify(weeklyPlan))
@@ -31,6 +37,14 @@ export default function App() {
     localStorage.setItem('checkedItems', JSON.stringify(checkedItems))
   }, [checkedItems])
 
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites))
+  }, [favorites])
+
+  useEffect(() => {
+    localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed))
+  }, [recentlyViewed])
+
   const navigateTo = (page) => {
     setPreviousPage(currentPage)
     setCurrentPage(page)
@@ -40,6 +54,10 @@ export default function App() {
     setPreviousPage(currentPage)
     setSelectedRecipeId(recipeId)
     setCurrentPage('recipe')
+    setRecentlyViewed(prev => {
+      const filtered = prev.filter(id => id !== recipeId)
+      return [recipeId, ...filtered].slice(0, 10)
+    })
   }
 
   const goBack = () => {
@@ -56,14 +74,17 @@ export default function App() {
     setWeeklyPlan(prev => prev.filter(id => id !== recipeId))
   }
 
+  const toggleFavorite = (recipeId) => {
+    setFavorites(prev =>
+      prev.includes(recipeId) ? prev.filter(id => id !== recipeId) : [...prev, recipeId]
+    )
+  }
+
   const toggleItem = (key) => {
     setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
   const clearChecked = () => setCheckedItems({})
-  const checkAll = () => {
-    // handled in ShoppingList
-  }
 
   const showNav = currentPage !== 'recipe'
 
@@ -72,9 +93,12 @@ export default function App() {
       {currentPage === 'gallery' && (
         <Gallery
           weeklyPlan={weeklyPlan}
+          favorites={favorites}
+          recentlyViewed={recentlyViewed}
           onOpenRecipe={openRecipe}
           onAddToWeekly={addToWeekly}
           onRemoveFromWeekly={removeFromWeekly}
+          onToggleFavorite={toggleFavorite}
         />
       )}
       {currentPage === 'weekly' && (
@@ -103,8 +127,10 @@ export default function App() {
           recipeId={selectedRecipeId}
           weeklyPlan={weeklyPlan}
           persons={persons}
+          favorites={favorites}
           onAddToWeekly={addToWeekly}
           onRemoveFromWeekly={removeFromWeekly}
+          onToggleFavorite={toggleFavorite}
           onBack={goBack}
         />
       )}

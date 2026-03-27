@@ -13,15 +13,18 @@ function formatAmount(amount, scale) {
   return whole > 0 ? `${whole} ${fracStr}` : fracStr
 }
 
-export default function RecipeDetail({ recipeId, weeklyPlan, persons, onAddToWeekly, onRemoveFromWeekly, onBack }) {
+export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, onBack }) {
   const [activeTab, setActiveTab] = useState('ingredients')
   const [imgError, setImgError] = useState(false)
+  const [localServings, setLocalServings] = useState(null)
 
   const recipe = recipes.find(r => r.id === recipeId)
   if (!recipe) return null
 
   const isAdded = weeklyPlan.includes(recipe.id)
-  const scale = persons / recipe.servings
+  const isFavorite = favorites.includes(recipe.id)
+  const servings = localServings ?? persons
+  const scale = servings / recipe.servings
   const totalTime = recipe.prepTime + recipe.cookTime
 
   return (
@@ -49,27 +52,37 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, onAddToWee
           </svg>
         </button>
 
-        <button
-          className={`detail-add-hero-btn ${isAdded ? 'added' : ''}`}
-          onClick={() => isAdded ? onRemoveFromWeekly(recipe.id) : onAddToWeekly(recipe.id)}
-        >
-          {isAdded ? (
-            <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
-              Added
-            </>
-          ) : (
-            <>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-              Add to week
-            </>
-          )}
-        </button>
+        <div className="detail-hero-actions">
+          <button
+            className={`detail-fav-btn ${isFavorite ? 'active' : ''}`}
+            onClick={() => onToggleFavorite(recipe.id)}
+          >
+            <svg viewBox="0 0 24 24" fill={isFavorite ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+            </svg>
+          </button>
+          <button
+            className={`detail-add-hero-btn ${isAdded ? 'added' : ''}`}
+            onClick={() => isAdded ? onRemoveFromWeekly(recipe.id) : onAddToWeekly(recipe.id)}
+          >
+            {isAdded ? (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Added
+              </>
+            ) : (
+              <>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+                Add to week
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       <div className="detail-body">
@@ -95,14 +108,31 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, onAddToWee
             {recipe.difficulty === 'easy' ? '⭐' : recipe.difficulty === 'medium' ? '⭐⭐' : '⭐⭐⭐'}
             &nbsp;{recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1)}
           </div>
-          <div className="stat-pill">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+        </div>
+
+        {/* Serving scaler */}
+        <div className="serving-scaler">
+          <span className="serving-label">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
               <circle cx="9" cy="7" r="4" />
               <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
               <path d="M16 3.13a4 4 0 0 1 0 7.75" />
             </svg>
-            {persons} people
+            Servings
+          </span>
+          <div className="serving-stepper">
+            <button
+              className="stepper-btn"
+              onClick={() => setLocalServings(Math.max(1, servings - 1))}
+              disabled={servings <= 1}
+            >−</button>
+            <span className="serving-count">{servings}</span>
+            <button
+              className="stepper-btn"
+              onClick={() => setLocalServings(servings + 1)}
+              disabled={servings >= 20}
+            >+</button>
           </div>
         </div>
 
@@ -147,7 +177,7 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, onAddToWee
             ))}
             {scale !== 1 && (
               <div style={{ padding: '10px 14px 0', fontSize: 12, color: 'var(--text-muted)', fontStyle: 'italic' }}>
-                Quantities scaled for {persons} people (base: {recipe.servings})
+                Quantities scaled for {servings} people (base: {recipe.servings})
               </div>
             )}
           </div>
