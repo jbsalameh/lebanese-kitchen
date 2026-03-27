@@ -3,6 +3,7 @@ import Gallery from './pages/Gallery'
 import WeeklyPlan from './pages/WeeklyPlan'
 import ShoppingList from './pages/ShoppingList'
 import RecipeDetail from './pages/RecipeDetail'
+import CookingMode from './pages/CookingMode'
 import BottomNav from './components/BottomNav'
 
 export default function App() {
@@ -86,7 +87,13 @@ export default function App() {
 
   const clearChecked = () => setCheckedItems({})
 
-  const showNav = currentPage !== 'recipe'
+  const startCooking = (recipeId) => {
+    setPreviousPage(currentPage)
+    setSelectedRecipeId(recipeId)
+    setCurrentPage('cooking')
+  }
+
+  const showNav = currentPage !== 'recipe' && currentPage !== 'cooking'
 
   return (
     <div className="app">
@@ -131,7 +138,14 @@ export default function App() {
           onAddToWeekly={addToWeekly}
           onRemoveFromWeekly={removeFromWeekly}
           onToggleFavorite={toggleFavorite}
+          onStartCooking={startCooking}
           onBack={goBack}
+        />
+      )}
+      {currentPage === 'cooking' && (
+        <CookingMode
+          recipeId={selectedRecipeId}
+          onExit={goBack}
         />
       )}
       {showNav && (

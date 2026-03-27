@@ -13,7 +13,7 @@ function formatAmount(amount, scale) {
   return whole > 0 ? `${whole} ${fracStr}` : fracStr
 }
 
-export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, onBack }) {
+export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, onStartCooking, onBack }) {
   const [activeTab, setActiveTab] = useState('ingredients')
   const [imgError, setImgError] = useState(false)
   const [localServings, setLocalServings] = useState(null)
@@ -192,6 +192,16 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites,
               </div>
             ))}
           </div>
+        )}
+
+        {/* Start Cooking button */}
+        {activeTab === 'instructions' && (
+          <button className="start-cooking-btn" onClick={() => onStartCooking(recipe.id)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <polygon points="5 3 19 12 5 21 5 3" />
+            </svg>
+            Start Cooking
+          </button>
         )}
 
         {activeTab === 'tips' && (
