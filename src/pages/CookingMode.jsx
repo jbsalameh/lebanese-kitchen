@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import recipes, { getCategoryGradient } from '../data/recipes'
+import TimedText from '../components/TimedText'
 
-export default function CookingMode({ recipeId, onExit }) {
+export default function CookingMode({ recipeId, onStartTimer, onExit }) {
   const [step, setStep] = useState(0)
   const [completedSteps, setCompletedSteps] = useState({})
   const [touchStart, setTouchStart] = useState(null)
@@ -100,7 +101,7 @@ export default function CookingMode({ recipeId, onExit }) {
       <div className="cooking-content">
         <div className="cooking-step-badge">Step {step + 1}</div>
         <div className="cooking-instruction">
-          {recipe.instructions[step]}
+          <TimedText text={recipe.instructions[step]} onStartTimer={onStartTimer} />
         </div>
       </div>
 

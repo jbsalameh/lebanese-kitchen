@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import recipes, { getCategoryGradient } from '../data/recipes'
+import TimedText from '../components/TimedText'
 
 function formatAmount(amount, scale) {
   const val = amount * scale
@@ -13,7 +14,7 @@ function formatAmount(amount, scale) {
   return whole > 0 ? `${whole} ${fracStr}` : fracStr
 }
 
-export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, onStartCooking, onBack }) {
+export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, onStartCooking, onStartTimer, onBack }) {
   const [activeTab, setActiveTab] = useState('ingredients')
   const [imgError, setImgError] = useState(false)
   const [localServings, setLocalServings] = useState(null)
@@ -188,7 +189,9 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites,
             {recipe.instructions.map((step, i) => (
               <div key={i} className="instruction-step">
                 <div className="step-number">{i + 1}</div>
-                <div className="step-text">{step}</div>
+                <div className="step-text">
+                  <TimedText text={step} onStartTimer={onStartTimer} />
+                </div>
               </div>
             ))}
           </div>

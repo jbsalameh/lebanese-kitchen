@@ -5,6 +5,7 @@ import ShoppingList from './pages/ShoppingList'
 import RecipeDetail from './pages/RecipeDetail'
 import CookingMode from './pages/CookingMode'
 import BottomNav from './components/BottomNav'
+import TimerOverlay from './components/TimerOverlay'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('gallery')
@@ -85,6 +86,22 @@ export default function App() {
     setCheckedItems(prev => ({ ...prev, [key]: !prev[key] }))
   }
 
+  const [timers, setTimers] = useState([])
+
+  const addTimer = (minutes, label) => {
+    setTimers(prev => [...prev, {
+      id: Date.now(),
+      label,
+      duration: minutes,
+      endsAt: Date.now() + minutes * 60000,
+      notified: false,
+    }])
+  }
+
+  const removeTimer = (id) => {
+    setTimers(prev => prev.filter(t => t.id !== id))
+  }
+
   const clearChecked = () => setCheckedItems({})
 
   const startCooking = (recipeId) => {
@@ -139,12 +156,14 @@ export default function App() {
           onRemoveFromWeekly={removeFromWeekly}
           onToggleFavorite={toggleFavorite}
           onStartCooking={startCooking}
+          onStartTimer={addTimer}
           onBack={goBack}
         />
       )}
       {currentPage === 'cooking' && (
         <CookingMode
           recipeId={selectedRecipeId}
+          onStartTimer={addTimer}
           onExit={goBack}
         />
       )}
@@ -155,6 +174,7 @@ export default function App() {
           weeklyCount={weeklyPlan.length}
         />
       )}
+      <TimerOverlay timers={timers} onRemoveTimer={removeTimer} />
     </div>
   )
 }

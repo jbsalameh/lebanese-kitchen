@@ -1562,3 +1562,130 @@ body {
   box-shadow: 0 4px 14px rgba(200,135,58,0.35);
   font-size: 18px;
 }
+
+/* ── Time Chips (tappable times in instructions) ── */
+.time-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #DBEAFE;
+  color: #1E40AF;
+  border: 1.5px solid #93C5FD;
+  border-radius: 14px;
+  padding: 2px 10px;
+  font-family: var(--font);
+  font-size: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+  vertical-align: baseline;
+  line-height: 1.6;
+}
+
+.time-chip:hover {
+  background: #1E40AF;
+  color: white;
+  border-color: #1E40AF;
+}
+
+.time-chip:hover svg { stroke: white; }
+
+.time-chip svg {
+  stroke: #1E40AF;
+  flex-shrink: 0;
+}
+
+/* ── Timer Overlay ────────────────────────── */
+.timer-overlay {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 12px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 448px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 150;
+  pointer-events: none;
+}
+
+.timer-pill {
+  position: relative;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  pointer-events: auto;
+  border: 1.5px solid var(--border);
+}
+
+.timer-pill.done {
+  border-color: var(--accent);
+  animation: timer-pulse 1s ease-in-out infinite;
+}
+
+@keyframes timer-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(200,135,58,0.3); }
+  50% { box-shadow: 0 0 0 8px rgba(200,135,58,0); }
+}
+
+.timer-pill-progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: rgba(27,67,50,0.06);
+  transition: width 1s linear;
+}
+
+.timer-pill-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.timer-pill-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timer-pill-time {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--primary);
+  font-variant-numeric: tabular-nums;
+  min-width: 52px;
+  text-align: right;
+}
+
+.timer-pill.done .timer-pill-time {
+  color: var(--accent);
+}
+
+.timer-pill-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.timer-pill-close svg {
+  width: 14px;
+  height: 14px;
+  stroke: var(--text-muted);
+}
