@@ -4,6 +4,7 @@ import WeeklyPlan from './pages/WeeklyPlan'
 import ShoppingList from './pages/ShoppingList'
 import RecipeDetail from './pages/RecipeDetail'
 import CookingMode from './pages/CookingMode'
+import FridgeCook from './pages/FridgeCook'
 import BottomNav from './components/BottomNav'
 import TimerOverlay from './components/TimerOverlay'
 
@@ -144,6 +145,13 @@ export default function App() {
           onClearChecked={clearChecked}
           onNavigate={navigateTo}
           onOpenRecipe={openRecipe}
+        />
+      )}
+      {currentPage === 'fridge' && (
+        <FridgeCook
+          onOpenRecipe={openRecipe}
+          onAddToWeekly={addToWeekly}
+          weeklyPlan={weeklyPlan}
         />
       )}
       {currentPage === 'recipe' && (

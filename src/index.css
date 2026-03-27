@@ -1689,3 +1689,365 @@ body {
   height: 14px;
   stroke: var(--text-muted);
 }
+
+/* ── Fridge / What Can I Cook ── */
+
+.fridge-page {
+  padding: 20px 16px 100px;
+}
+
+.fridge-header {
+  margin-bottom: 20px;
+}
+
+.fridge-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fridge-icon {
+  font-size: 28px;
+}
+
+.fridge-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.fridge-search-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.fridge-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 18px;
+  height: 18px;
+  stroke: var(--text-muted);
+  pointer-events: none;
+}
+
+.fridge-search {
+  width: 100%;
+  padding: 12px 40px 12px 42px;
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  font-size: 15px;
+  background: white;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.fridge-search:focus {
+  border-color: var(--primary);
+}
+
+.fridge-search-clear {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--text-muted);
+}
+
+.fridge-suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fridge-suggestion {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 14px;
+  border: 1.5px dashed var(--primary);
+  border-radius: 20px;
+  background: #F0FDF4;
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.fridge-suggestion:hover {
+  background: var(--primary);
+  color: white;
+  border-style: solid;
+}
+
+.fridge-browse-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: var(--accent);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 8px;
+}
+
+.fridge-browse {
+  margin-bottom: 16px;
+}
+
+.fridge-cat-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.fridge-cat-chip {
+  padding: 6px 12px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+}
+
+.fridge-cat-chip.active {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.fridge-browse-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.fridge-browse-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 7px 13px;
+  border-radius: 18px;
+  border: 1.5px solid var(--border);
+  background: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text);
+}
+
+.fridge-browse-item.selected {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+
+.fridge-selected {
+  background: white;
+  border-radius: 16px;
+  padding: 14px;
+  margin: 16px 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.fridge-selected-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.fridge-selected-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.fridge-clear-btn {
+  background: none;
+  border: none;
+  color: #DC2626;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.fridge-selected-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.fridge-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 16px;
+  background: var(--primary);
+  color: white;
+  font-size: 13px;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.fridge-chip:hover {
+  opacity: 0.85;
+}
+
+.fridge-results {
+  margin-top: 20px;
+}
+
+.fridge-results-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 14px;
+}
+
+.fridge-no-results {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.fridge-match-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.fridge-match-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.fridge-match-pct {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.fridge-match-pct[data-level="full"] {
+  background: #D1FAE5;
+  color: #065F46;
+}
+
+.fridge-match-pct[data-level="high"] {
+  background: #DBEAFE;
+  color: #1E40AF;
+}
+
+.fridge-match-pct[data-level="mid"] {
+  background: #FEF9C3;
+  color: #92400E;
+}
+
+.fridge-match-pct[data-level="low"] {
+  background: #F3F4F6;
+  color: #6B7280;
+}
+
+.fridge-match-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.fridge-match-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.fridge-match-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.fridge-match-missing {
+  font-size: 11px;
+  color: #DC2626;
+  margin-top: 3px;
+}
+
+.fridge-match-actions {
+  flex-shrink: 0;
+}
+
+.fridge-match-add {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-muted);
+}
+
+.fridge-match-add:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.fridge-match-add.added {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.fridge-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.fridge-empty-icon {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.fridge-empty p {
+  font-size: 15px;
+}

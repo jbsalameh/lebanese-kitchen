@@ -15,6 +15,19 @@ export default function BottomNav({ currentPage, onNavigate, weeklyCount }) {
       </button>
 
       <button
+        className={`nav-item ${currentPage === 'fridge' ? 'active' : ''}`}
+        onClick={() => onNavigate('fridge')}
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <rect x="4" y="2" width="16" height="20" rx="2" />
+          <line x1="4" y1="10" x2="20" y2="10" />
+          <line x1="9" y1="6" x2="9" y2="6.01" strokeWidth="3" strokeLinecap="round" />
+          <line x1="9" y1="14" x2="9" y2="14.01" strokeWidth="3" strokeLinecap="round" />
+        </svg>
+        Fridge
+      </button>
+
+      <button
         className={`nav-item ${currentPage === 'weekly' ? 'active' : ''}`}
         onClick={() => onNavigate('weekly')}
       >
