@@ -2051,3 +2051,204 @@ body {
 .fridge-empty p {
   font-size: 15px;
 }
+
+/* ── AI Chef Section ── */
+
+.ai-chef-section {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 2px dashed var(--border);
+}
+
+.ai-chef-header {
+  margin-bottom: 16px;
+}
+
+.ai-chef-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ai-chef-icon {
+  font-size: 24px;
+}
+
+.ai-chef-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.ai-chef-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 20px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent), #D4943F);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+}
+
+.ai-chef-btn:hover:not(:disabled) {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.ai-chef-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.ai-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2.5px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.ai-chef-error {
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 12px;
+  color: #DC2626;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.ai-recipe-card {
+  margin-top: 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  border: 1.5px solid var(--accent);
+}
+
+.ai-recipe-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  background: linear-gradient(135deg, var(--accent), #D4943F);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.ai-recipe-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ai-recipe-name-ar {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.ai-recipe-desc {
+  font-size: 14px;
+  color: var(--text-light);
+  line-height: 1.5;
+  margin: 10px 0;
+}
+
+.ai-recipe-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.ai-recipe-stats span {
+  padding: 5px 10px;
+  background: var(--bg);
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.ai-recipe-matched {
+  margin: 14px 0;
+}
+
+.ai-matched-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+.ai-matched-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.ai-matched-chip {
+  padding: 4px 10px;
+  background: #D1FAE5;
+  color: #065F46;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ai-recipe-extra {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+.ai-extra-label {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 4px;
+}
+
+.ai-recipe-ingredients {
+  margin-top: 16px;
+}
+
+.ai-recipe-ingredients h4,
+.ai-recipe-instructions h4,
+.ai-recipe-tips h4 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 10px;
+}
+
+.ai-recipe-instructions {
+  margin-top: 16px;
+}
+
+.ai-recipe-tips {
+  margin-top: 16px;
+}

@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import recipes from '../data/recipes'
+import TimedText from '../components/TimedText'
 
 // Extract all unique ingredient base names from recipes, excluding pantry staples
 const STAPLES = ['salt', 'water', 'olive oil', 'black pepper', 'ground black pepper']
@@ -54,13 +55,40 @@ function matchScore(recipe, selectedSet) {
   }
 }
 
-export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan }) {
+export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan, onStartTimer }) {
   const [selected, setSelected] = useState(() => {
     try { return new Set(JSON.parse(localStorage.getItem('fridgeIngredients')) || []) } catch { return new Set() }
   })
   const [search, setSearch] = useState('')
   const [showBrowse, setShowBrowse] = useState(false)
   const [browseCategory, setBrowseCategory] = useState(null)
+  const [aiRecipe, setAiRecipe] = useState(null)
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState(null)
+
+  const generateAiRecipe = async () => {
+    if (selectedSet.size === 0) return
+    setAiLoading(true)
+    setAiError(null)
+    setAiRecipe(null)
+    try {
+      const ingredientNames = allIngredients
+        .filter(ing => selectedSet.has(normalizeIngName(ing.name)))
+        .map(ing => ing.name)
+      const res = await fetch('/api/generate-recipe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ingredients: ingredientNames }),
+      })
+      if (!res.ok) throw new Error('Failed to generate recipe')
+      const data = await res.json()
+      setAiRecipe(data.recipe)
+    } catch (err) {
+      setAiError('Could not generate recipe. Make sure the app is deployed on Vercel with GEMINI_API_KEY configured.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
 
   const saveSelected = (newSet) => {
     setSelected(newSet)
@@ -285,6 +313,113 @@ export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan }) 
               </div>
             )
           })}
+        </div>
+      )}
+
+      {/* AI Chef section */}
+      {selectedSet.size >= 2 && (
+        <div className="ai-chef-section">
+          <div className="ai-chef-header">
+            <h2 className="ai-chef-title">
+              <span className="ai-chef-icon">👨‍🍳</span>
+              AI Chef
+            </h2>
+            <p className="ai-chef-desc">Let AI create a custom Lebanese recipe from your ingredients</p>
+          </div>
+          <button
+            className="ai-chef-btn"
+            onClick={generateAiRecipe}
+            disabled={aiLoading}
+          >
+            {aiLoading ? (
+              <>
+                <span className="ai-spinner" />
+                Cooking up something...
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5" />
+                  <path d="M2 12l10 5 10-5" />
+                </svg>
+                Generate Recipe
+              </>
+            )}
+          </button>
+
+          {aiError && (
+            <div className="ai-chef-error">{aiError}</div>
+          )}
+
+          {aiRecipe && (
+            <div className="ai-recipe-card">
+              <div className="ai-recipe-badge">AI Generated</div>
+              <h3 className="ai-recipe-name">{aiRecipe.name}</h3>
+              {aiRecipe.nameAr && <div className="ai-recipe-name-ar">{aiRecipe.nameAr}</div>}
+              <p className="ai-recipe-desc">{aiRecipe.description}</p>
+
+              <div className="ai-recipe-stats">
+                <span>⏱ Prep {aiRecipe.prepTime}m</span>
+                <span>🔥 Cook {aiRecipe.cookTime}m</span>
+                <span>👥 Serves {aiRecipe.servings}</span>
+                <span>📊 {aiRecipe.difficulty}</span>
+              </div>
+
+              {aiRecipe.matchedIngredients?.length > 0 && (
+                <div className="ai-recipe-matched">
+                  <span className="ai-matched-label">Using your ingredients:</span>
+                  <div className="ai-matched-chips">
+                    {aiRecipe.matchedIngredients.map((ing, i) => (
+                      <span key={i} className="ai-matched-chip">{ing}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {aiRecipe.extraIngredients?.length > 0 && (
+                <div className="ai-recipe-extra">
+                  <span className="ai-extra-label">You'll also need:</span>
+                  {aiRecipe.extraIngredients.join(', ')}
+                </div>
+              )}
+
+              <div className="ai-recipe-ingredients">
+                <h4>Ingredients</h4>
+                {aiRecipe.ingredients?.map((ing, i) => (
+                  <div key={i} className="ingredient-item">
+                    <span className="ingredient-name">{ing.name}</span>
+                    <span className="ingredient-amount">{ing.amount} {ing.unit}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="ai-recipe-instructions">
+                <h4>Instructions</h4>
+                {aiRecipe.instructions?.map((step, i) => (
+                  <div key={i} className="instruction-step">
+                    <div className="step-number">{i + 1}</div>
+                    <div className="step-text">
+                      <TimedText text={step} onStartTimer={onStartTimer} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {aiRecipe.tips?.length > 0 && (
+                <div className="ai-recipe-tips">
+                  <h4>Tips</h4>
+                  {aiRecipe.tips.map((tip, i) => (
+                    <div key={i} className="tip-item">{tip}</div>
+                  ))}
+                </div>
+              )}
+
+              <button className="ai-chef-btn" onClick={generateAiRecipe} disabled={aiLoading} style={{ marginTop: 16 }}>
+                {aiLoading ? 'Generating...' : '🔄 Generate Another'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 

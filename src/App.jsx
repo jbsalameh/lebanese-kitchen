@@ -152,6 +152,7 @@ export default function App() {
           onOpenRecipe={openRecipe}
           onAddToWeekly={addToWeekly}
           weeklyPlan={weeklyPlan}
+          onStartTimer={addTimer}
         />
       )}
       {currentPage === 'recipe' && (
