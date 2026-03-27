@@ -1292,6 +1292,55 @@ body {
   background: rgba(255,255,255,0.25);
 }
 
+/* ── Dietary Filter Chips ─────────────────── */
+.dietary-chips {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 14px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.dietary-chips::-webkit-scrollbar { display: none; }
+
+.dietary-chip {
+  flex-shrink: 0;
+  padding: 5px 10px;
+  border-radius: 16px;
+  border: 1.5px solid var(--border);
+  background: var(--card);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+.dietary-chip.active {
+  background: #D1FAE5;
+  border-color: #065F46;
+  color: #065F46;
+  font-weight: 600;
+}
+
+.clear-filters {
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-left: 8px;
+  text-decoration: underline;
+}
+
 /* ── Start Cooking Button ─────────────────── */
 .start-cooking-btn {
   width: 100%;

@@ -1,11 +1,22 @@
 import { useState, useMemo } from 'react'
-import recipes, { categories } from '../data/recipes'
+import recipes, { categories, getCategoryGradient, getDietary } from '../data/recipes'
 import RecipeCard from '../components/RecipeCard'
-import { getCategoryGradient } from '../data/recipes'
+
+const dietaryFilters = [
+  { id: 'vegetarian', label: 'Vegetarian', emoji: '🥬' },
+  { id: 'vegan', label: 'Vegan', emoji: '🌱' },
+  { id: 'glutenFree', label: 'Gluten-Free', emoji: '🌾' },
+  { id: 'dairyFree', label: 'Dairy-Free', emoji: '🥛' },
+]
 
 export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenRecipe, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite }) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
+  const [activeDietary, setActiveDietary] = useState([])
+
+  const toggleDietary = (id) => {
+    setActiveDietary(prev => prev.includes(id) ? prev.filter(d => d !== id) : [...prev, id])
+  }
 
   const recentRecipes = useMemo(() => {
     if (!recentlyViewed || recentlyViewed.length === 0) return []
@@ -23,15 +34,19 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
         r.tags.some(t => t.includes(q)) ||
         r.description.toLowerCase().includes(q) ||
         r.ingredients.some(ing => ing.name.toLowerCase().includes(q))
-      return matchCat && matchSearch
+      const dietary = getDietary(r)
+      const matchDietary = activeDietary.length === 0 || activeDietary.every(d => dietary[d])
+      return matchCat && matchSearch && matchDietary
     })
-  }, [search, activeCategory, favorites])
+  }, [search, activeCategory, favorites, activeDietary])
 
   const allCategories = [
     ...categories.slice(0, 1),
     { id: 'favorites', label: 'Favorites', emoji: '❤️' },
     ...categories.slice(1),
   ]
+
+  const hasActiveFilters = search || activeCategory !== 'all' || activeDietary.length > 0
 
   return (
     <div className="page">
@@ -75,10 +90,23 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
             </button>
           ))}
         </div>
+
+        <div className="dietary-chips">
+          {dietaryFilters.map(d => (
+            <button
+              key={d.id}
+              className={`dietary-chip ${activeDietary.includes(d.id) ? 'active' : ''}`}
+              onClick={() => toggleDietary(d.id)}
+            >
+              <span>{d.emoji}</span>
+              {d.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Recently Viewed */}
-      {recentRecipes.length > 0 && !search && activeCategory === 'all' && (
+      {recentRecipes.length > 0 && !search && activeCategory === 'all' && activeDietary.length === 0 && (
         <div className="recent-section">
           <div className="recent-title">Recently Viewed</div>
           <div className="recent-scroll">
@@ -102,9 +130,14 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
 
       {filtered.length > 0 ? (
         <>
-          {(search || activeCategory !== 'all') && (
+          {hasActiveFilters && (
             <div className="results-count">
               {filtered.length} recipe{filtered.length !== 1 ? 's' : ''} found
+              {activeDietary.length > 0 && (
+                <button className="clear-filters" onClick={() => setActiveDietary([])}>
+                  Clear dietary filters
+                </button>
+              )}
             </div>
           )}
           <div className="recipe-grid">

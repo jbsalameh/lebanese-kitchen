@@ -10,6 +10,24 @@ const categoryGradients = {
 
 export const getCategoryGradient = (cat) => categoryGradients[cat] || categoryGradients.main
 
+const glutenIngredients = ['bulgur', 'flour', 'bread', 'pita', 'vermicelli', 'semolina', 'phyllo', 'filo', 'toast', 'dough', 'pastry']
+const dairyIngredients = ['yogurt', 'cheese', 'butter', 'milk', 'cream', 'labneh']
+
+export function getDietary(recipe) {
+  const tags = recipe.tags || []
+  const ings = recipe.ingredients || []
+  const ingNames = ings.map(i => i.name.toLowerCase())
+  const hasMeat = ings.some(i => i.category === 'meat')
+  const hasDairy = ings.some(i => i.category === 'dairy') || ingNames.some(n => dairyIngredients.some(d => n.includes(d)))
+  const hasGluten = ingNames.some(n => glutenIngredients.some(g => n.includes(g)))
+  return {
+    vegetarian: !hasMeat && (tags.includes('vegetarian') || tags.includes('vegan') || !hasMeat),
+    vegan: !hasMeat && !hasDairy && (tags.includes('vegan') || (!hasMeat && !hasDairy)),
+    glutenFree: !hasGluten,
+    dairyFree: !hasDairy,
+  }
+}
+
 export const categories = [
   { id: 'all', label: 'All', emoji: '🍽️' },
   { id: 'main', label: 'Mains', emoji: '🍖' },
