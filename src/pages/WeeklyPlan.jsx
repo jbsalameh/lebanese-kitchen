@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import recipes, { getCategoryGradient } from '../data/recipes'
 
 function MealCard({ recipe, persons, onRemove, onOpen }) {
@@ -42,10 +42,49 @@ export default function WeeklyPlan({ weeklyPlan, persons, setPersons, onRemoveFr
     return sum + Math.ceil((r.calories * persons) / r.servings)
   }, 0)
 
+  const [copiedPlan, setCopiedPlan] = useState(false)
+
+  const handleSharePlan = useCallback(async () => {
+    if (selectedRecipes.length === 0) return
+    const text = `My Weekly Meal Plan (${persons} people)\n${'─'.repeat(30)}\n\n${selectedRecipes.map((r, i) => {
+      const cal = Math.ceil((r.calories * persons) / r.servings)
+      const time = r.prepTime + r.cookTime
+      return `${i + 1}. ${r.name} (${r.nameAr})\n   ${time} min · ${cal} kcal · ${r.difficulty}`
+    }).join('\n\n')}\n\n${'─'.repeat(30)}\nTotal: ~${totalCalories.toLocaleString()} kcal\n\nFrom Lebanese Kitchen 🇱🇧`
+
+    if (navigator.share) {
+      try { await navigator.share({ title: 'My Weekly Meal Plan', text }) } catch {}
+    } else {
+      await navigator.clipboard.writeText(text)
+      setCopiedPlan(true)
+      setTimeout(() => setCopiedPlan(false), 2000)
+    }
+  }, [selectedRecipes, persons, totalCalories])
+
   return (
     <div className="page">
       <div className="weekly-header">
-        <h1>My Week</h1>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <h1>My Week</h1>
+          {selectedRecipes.length > 0 && (
+            <button className="share-plan-btn" onClick={handleSharePlan}>
+              {copiedPlan ? (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <circle cx="18" cy="5" r="3" />
+                  <circle cx="6" cy="12" r="3" />
+                  <circle cx="18" cy="19" r="3" />
+                  <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                  <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                </svg>
+              )}
+              {copiedPlan ? 'Copied!' : 'Share'}
+            </button>
+          )}
+        </div>
         <p>
           {selectedRecipes.length === 0
             ? 'Add recipes from the gallery to plan your week'

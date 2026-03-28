@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useCallback } from 'react'
 import recipes, { getCategoryGradient } from '../data/recipes'
 import TimedText from '../components/TimedText'
 
@@ -27,6 +27,85 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites,
   const servings = localServings ?? persons
   const scale = servings / recipe.servings
   const totalTime = recipe.prepTime + recipe.cookTime
+  const [copied, setCopied] = useState(false)
+
+  const buildShareText = useCallback(() => {
+    const ingList = recipe.ingredients
+      .map(ing => `  ${formatAmount(ing.amount, scale)} ${ing.unit} ${ing.name}`)
+      .join('\n')
+    return `${recipe.name} (${recipe.nameAr})\n${recipe.description}\n\nServings: ${servings} · ${totalTime} min · ${recipe.difficulty}\n\nIngredients:\n${ingList}\n\nInstructions:\n${recipe.instructions.map((s, i) => `${i + 1}. ${s}`).join('\n')}\n\nFrom Lebanese Kitchen 🇱🇧`
+  }, [recipe, servings, scale, totalTime])
+
+  const handleShare = async () => {
+    const text = buildShareText()
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: recipe.name, text })
+      } catch { /* user cancelled */ }
+    } else {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const handlePrint = () => {
+    const text = buildShareText()
+    const printWin = window.open('', '_blank')
+    printWin.document.write(`<!DOCTYPE html><html><head><title>${recipe.name}</title><style>
+      body { font-family: Georgia, serif; max-width: 700px; margin: 40px auto; padding: 0 20px; color: #1a1a1a; line-height: 1.6; }
+      h1 { margin-bottom: 4px; font-size: 28px; }
+      .arabic { font-size: 18px; color: #666; margin-bottom: 16px; }
+      .meta { display: flex; gap: 16px; margin: 12px 0 20px; font-size: 14px; color: #555; }
+      .meta span { padding: 4px 12px; background: #f3f0ec; border-radius: 20px; }
+      p.desc { font-style: italic; color: #444; margin-bottom: 20px; }
+      h2 { font-size: 18px; margin: 24px 0 10px; border-bottom: 1px solid #ddd; padding-bottom: 6px; }
+      .ingredients { list-style: none; padding: 0; }
+      .ingredients li { padding: 6px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; }
+      .instructions { padding-left: 20px; }
+      .instructions li { margin-bottom: 10px; }
+      .nutrition { display: flex; gap: 20px; margin: 16px 0; }
+      .nutrition div { text-align: center; }
+      .nutrition .val { font-weight: bold; font-size: 18px; }
+      .nutrition .lbl { font-size: 12px; color: #888; }
+      .tips { background: #f9f7f4; padding: 16px; border-radius: 8px; margin-top: 16px; }
+      .tips p { margin: 6px 0; }
+      .footer { margin-top: 30px; font-size: 12px; color: #aaa; text-align: center; }
+      @media print { body { margin: 20px; } }
+    </style></head><body>
+      <h1>${recipe.name}</h1>
+      <div class="arabic">${recipe.nameAr}</div>
+      <div class="meta">
+        <span>Prep: ${recipe.prepTime}m</span>
+        <span>Cook: ${recipe.cookTime}m</span>
+        <span>${recipe.difficulty}</span>
+        <span>${servings} servings</span>
+      </div>
+      <p class="desc">${recipe.description}</p>
+      <div class="nutrition">
+        ${[
+          { l: 'Calories', v: Math.round(recipe.calories * scale) },
+          { l: 'Protein', v: Math.round(recipe.protein * scale) + 'g' },
+          { l: 'Carbs', v: Math.round(recipe.carbs * scale) + 'g' },
+          { l: 'Fat', v: Math.round(recipe.fat * scale) + 'g' },
+          { l: 'Fiber', v: Math.round(recipe.fiber * scale) + 'g' },
+        ].map(n => `<div><div class="val">${n.v}</div><div class="lbl">${n.l}</div></div>`).join('')}
+      </div>
+      <h2>Ingredients</h2>
+      <ul class="ingredients">
+        ${recipe.ingredients.map(ing => `<li><span>${ing.name}</span><span>${formatAmount(ing.amount, scale)} ${ing.unit}</span></li>`).join('')}
+      </ul>
+      <h2>Instructions</h2>
+      <ol class="instructions">
+        ${recipe.instructions.map(s => `<li>${s}</li>`).join('')}
+      </ol>
+      ${recipe.tips && recipe.tips.length > 0 ? `<h2>Tips</h2><div class="tips">${recipe.tips.map(t => `<p>💡 ${t}</p>`).join('')}</div>` : ''}
+      <div class="footer">Lebanese Kitchen 🇱🇧</div>
+    </body></html>`)
+    printWin.document.close()
+    printWin.focus()
+    printWin.print()
+  }
 
   return (
     <div className="page recipe-detail">
@@ -54,6 +133,28 @@ export default function RecipeDetail({ recipeId, weeklyPlan, persons, favorites,
         </button>
 
         <div className="detail-hero-actions">
+          <button className="detail-action-btn" onClick={handleShare} title={copied ? 'Copied!' : 'Share'}>
+            {copied ? (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            ) : (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            )}
+          </button>
+          <button className="detail-action-btn" onClick={handlePrint} title="Print">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20">
+              <polyline points="6 9 6 2 18 2 18 9" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+          </button>
           <button
             className={`detail-fav-btn ${isFavorite ? 'active' : ''}`}
             onClick={() => onToggleFavorite(recipe.id)}

@@ -535,6 +535,31 @@ body {
   z-index: 5;
 }
 
+.detail-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  color: var(--text-muted);
+  transition: all 0.2s;
+}
+
+.detail-action-btn:active {
+  transform: scale(0.9);
+}
+
+.detail-action-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
 .detail-fav-btn {
   width: 40px;
   height: 40px;
@@ -991,6 +1016,26 @@ body {
 }
 
 .goto-shopping-btn:hover { opacity: 0.9; }
+
+.share-plan-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.share-plan-btn:active {
+  transform: scale(0.95);
+}
 
 /* ── Shopping List ─────────────────────────── */
 .shopping-header {
@@ -2680,6 +2725,7 @@ body {
 [data-theme="dark"] .shopping-checkbox.checked { background: var(--primary); border-color: var(--primary); }
 
 [data-theme="dark"] .detail-cook-btn { color: #fff; }
+[data-theme="dark"] .detail-action-btn { background: rgba(30,30,30,0.9); color: var(--text-muted); }
 [data-theme="dark"] .install-btn { color: #121212; }
 [data-theme="dark"] .update-btn { color: #121212; }
 
