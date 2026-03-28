@@ -9,7 +9,7 @@ const dietaryFilters = [
   { id: 'dairyFree', label: 'Dairy-Free', emoji: '🥛' },
 ]
 
-export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenRecipe, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite }) {
+export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenRecipe, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, theme, onToggleTheme }) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeDietary, setActiveDietary] = useState([])
@@ -56,7 +56,12 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
     <div className="page">
       <div className="gallery-header">
         <div className="gallery-brand">
-          <h1>Lebanese Kitchen</h1>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <h1>Lebanese Kitchen</h1>
+            <button className="theme-toggle" onClick={onToggleTheme} aria-label="Toggle dark mode">
+              {theme === 'light' ? '🌙' : '☀️'}
+            </button>
+          </div>
           <span>🇱🇧 {recipes.length} recipes</span>
         </div>
 

@@ -8,12 +8,14 @@
   --accent-light: #FEF3C7;
   --bg: #F7F5F2;
   --card: #FFFFFF;
+  --card-alt: #F3F0EC;
   --border: #E8E4DF;
   --text: #1A1A1A;
   --text-muted: #6B6B6B;
   --text-light: #A0A0A0;
   --red: #DC2626;
   --red-pale: #FEE2E2;
+  --outer-bg: #E8E4DF;
   --font: 'DM Sans', sans-serif;
   --font-display: 'Playfair Display', serif;
   --radius: 18px;
@@ -24,9 +26,29 @@
   --nav-height: 72px;
 }
 
+[data-theme="dark"] {
+  --primary: #4ADE80;
+  --primary-light: #86EFAC;
+  --primary-pale: #14332A;
+  --accent: #F0B060;
+  --accent-light: #3D2E14;
+  --bg: #121212;
+  --card: #1E1E1E;
+  --card-alt: #2A2A2A;
+  --border: #333333;
+  --text: #E8E4DF;
+  --text-muted: #A0A0A0;
+  --text-light: #6B6B6B;
+  --red: #F87171;
+  --red-pale: #3B1111;
+  --outer-bg: #0A0A0A;
+  --shadow: 0 2px 16px rgba(0,0,0,0.3);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.5);
+}
+
 html, body, #root {
   height: 100%;
-  background: #E8E4DF;
+  background: var(--outer-bg);
 }
 
 body {
@@ -2618,4 +2640,153 @@ body {
 @keyframes slideUp {
   from { transform: translateY(100%); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* ── Theme Toggle ──────────────────────────── */
+.theme-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.theme-toggle:active {
+  transform: scale(0.9);
+}
+
+/* ── Dark Mode Overrides ───────────────────── */
+[data-theme="dark"] .diff-easy { background: #14532D; color: #86EFAC; }
+[data-theme="dark"] .diff-medium { background: #422006; color: #FCD34D; }
+[data-theme="dark"] .diff-hard { background: #450A0A; color: #FCA5A5; }
+
+[data-theme="dark"] .cat-main { background: #431407; color: #FDBA74; }
+[data-theme="dark"] .cat-rice { background: #422006; color: #FCD34D; }
+[data-theme="dark"] .cat-mezze { background: #14532D; color: #86EFAC; }
+[data-theme="dark"] .cat-soup { background: #1E3A5F; color: #93C5FD; }
+[data-theme="dark"] .cat-breakfast { background: #422006; color: #FCD34D; }
+[data-theme="dark"] .cat-salad { background: #14532D; color: #86EFAC; }
+[data-theme="dark"] .cat-dessert { background: #3B0764; color: #D8B4FE; }
+
+[data-theme="dark"] .shopping-item.checked { background: #252525; }
+[data-theme="dark"] .shopping-checkbox.checked { background: var(--primary); border-color: var(--primary); }
+
+[data-theme="dark"] .detail-cook-btn { color: #fff; }
+[data-theme="dark"] .install-btn { color: #121212; }
+[data-theme="dark"] .update-btn { color: #121212; }
+
+[data-theme="dark"] .chip.active {
+  background: var(--primary);
+  color: #121212;
+}
+
+[data-theme="dark"] .card-gradient {
+  opacity: 0.85;
+}
+
+[data-theme="dark"] .fridge-tag.selected {
+  background: var(--primary);
+  color: #121212;
+}
+
+[data-theme="dark"] .ai-section { background: var(--card); }
+[data-theme="dark"] .ai-generate-btn { color: #121212; }
+[data-theme="dark"] .ai-save-btn { background: var(--card-alt); }
+[data-theme="dark"] .ai-save-btn.delete { background: var(--red-pale); color: var(--red); }
+
+[data-theme="dark"] .cooking-mode {
+  background: #121212;
+  color: var(--text);
+}
+
+[data-theme="dark"] .cooking-step-text { color: var(--text); }
+[data-theme="dark"] .cooking-progress-fill { background: var(--primary); }
+
+[data-theme="dark"] .weekly-day-header { background: var(--card-alt); }
+[data-theme="dark"] .weekly-recipe-card { background: var(--card); }
+
+[data-theme="dark"] .collection-card { opacity: 0.9; }
+
+/* ── Animations: Page Fade ─────────────────── */
+.page {
+  animation: pageFadeIn 0.25s ease;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Animations: Card Press ────────────────── */
+.recipe-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.recipe-card:active {
+  transform: scale(0.97);
+}
+
+/* ── Animations: Button Press ──────────────── */
+.chip, .dietary-chip, .detail-cook-btn, .detail-add-hero-btn,
+.fridge-tag, .ai-generate-btn, .collection-card {
+  transition: transform 0.12s ease, background 0.2s, color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.chip:active, .dietary-chip:active, .detail-cook-btn:active,
+.detail-add-hero-btn:active, .fridge-tag:active,
+.ai-generate-btn:active, .collection-card:active {
+  transform: scale(0.95);
+}
+
+/* ── Animations: Favorite Heart Pop ────────── */
+.card-action:active, .detail-fav-btn:active {
+  animation: heartPop 0.3s ease;
+}
+
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}
+
+/* ── Animations: Bottom Nav Tap ────────────── */
+.nav-tab {
+  transition: color 0.2s, transform 0.12s ease;
+}
+
+.nav-tab:active {
+  transform: scale(0.9);
+}
+
+/* ── Animations: Staggered Card Entrance ───── */
+.recipe-card {
+  animation: cardSlideUp 0.35s ease backwards;
+}
+
+.recipe-card:nth-child(1) { animation-delay: 0.02s; }
+.recipe-card:nth-child(2) { animation-delay: 0.06s; }
+.recipe-card:nth-child(3) { animation-delay: 0.10s; }
+.recipe-card:nth-child(4) { animation-delay: 0.14s; }
+.recipe-card:nth-child(5) { animation-delay: 0.18s; }
+.recipe-card:nth-child(6) { animation-delay: 0.22s; }
+
+@keyframes cardSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Smooth theme transition ───────────────── */
+html.theme-transition,
+html.theme-transition *,
+html.theme-transition *::before,
+html.theme-transition *::after {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
 }

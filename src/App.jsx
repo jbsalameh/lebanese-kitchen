@@ -9,6 +9,7 @@ import BottomNav from './components/BottomNav'
 import TimerOverlay from './components/TimerOverlay'
 import { OfflineBanner, UpdateBanner, InstallPrompt } from './components/PWAPrompts'
 import { usePWA } from './hooks/usePWA'
+import { useTheme } from './hooks/useTheme'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('gallery')
@@ -119,6 +120,7 @@ export default function App() {
   }
 
   const { isOffline, needRefresh, installPrompt, doUpdate, doInstall, dismissUpdate } = usePWA()
+  const { theme, toggleTheme } = useTheme()
 
   const showNav = currentPage !== 'recipe' && currentPage !== 'cooking'
 
@@ -135,6 +137,8 @@ export default function App() {
           onAddToWeekly={addToWeekly}
           onRemoveFromWeekly={removeFromWeekly}
           onToggleFavorite={toggleFavorite}
+          theme={theme}
+          onToggleTheme={toggleTheme}
         />
       )}
       {currentPage === 'weekly' && (
