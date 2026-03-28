@@ -10,7 +10,7 @@ import TimerOverlay from './components/TimerOverlay'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('gallery')
-  const [previousPage, setPreviousPage] = useState('gallery')
+  const [pageHistory, setPageHistory] = useState(['gallery'])
   const [selectedRecipeId, setSelectedRecipeId] = useState(null)
   const [weeklyPlan, setWeeklyPlan] = useState(() => {
     try { return JSON.parse(localStorage.getItem('weeklyPlan')) || [] } catch { return [] }
@@ -49,12 +49,12 @@ export default function App() {
   }, [recentlyViewed])
 
   const navigateTo = (page) => {
-    setPreviousPage(currentPage)
+    setPageHistory(prev => [...prev, page])
     setCurrentPage(page)
   }
 
   const openRecipe = (recipeId) => {
-    setPreviousPage(currentPage)
+    setPageHistory(prev => [...prev, 'recipe'])
     setSelectedRecipeId(recipeId)
     setCurrentPage('recipe')
     setRecentlyViewed(prev => {
@@ -64,7 +64,12 @@ export default function App() {
   }
 
   const goBack = () => {
-    setCurrentPage(previousPage)
+    setPageHistory(prev => {
+      if (prev.length <= 1) return ['gallery']
+      const newHistory = prev.slice(0, -1)
+      setCurrentPage(newHistory[newHistory.length - 1])
+      return newHistory
+    })
   }
 
   const addToWeekly = (recipeId) => {
@@ -106,7 +111,7 @@ export default function App() {
   const clearChecked = () => setCheckedItems({})
 
   const startCooking = (recipeId) => {
-    setPreviousPage(currentPage)
+    setPageHistory(prev => [...prev, 'cooking'])
     setSelectedRecipeId(recipeId)
     setCurrentPage('cooking')
   }

@@ -1709,7 +1709,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  z-index: 150;
+  z-index: 300;
   pointer-events: none;
 }
 
@@ -2353,4 +2353,127 @@ body {
 
 .ai-recipe-tips {
   margin-top: 16px;
+}
+
+.ai-recipe-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.ai-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 18px;
+  border: 2px solid var(--primary);
+  border-radius: 14px;
+  background: white;
+  color: var(--primary);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.ai-save-btn:hover:not(:disabled) {
+  background: var(--primary);
+  color: white;
+}
+
+.ai-save-btn:disabled {
+  border-color: #059669;
+  color: #059669;
+  opacity: 0.8;
+  cursor: default;
+}
+
+.ai-save-btn.delete {
+  border-color: #DC2626;
+  color: #DC2626;
+  width: 100%;
+}
+
+.ai-save-btn.delete:hover {
+  background: #DC2626;
+  color: white;
+}
+
+/* ── Saved AI Recipes ── */
+
+.saved-recipes-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1.5px solid var(--border);
+}
+
+.saved-recipes-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.saved-recipe-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s;
+  border-left: 3px solid var(--accent);
+}
+
+.saved-recipe-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+.saved-recipe-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-recipe-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.saved-recipe-meta {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+.saved-recipe-delete {
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.saved-recipe-delete:hover {
+  border-color: #DC2626;
+  color: #DC2626;
+  background: #FEF2F2;
 }

@@ -65,6 +65,25 @@ export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan, on
   const [aiRecipe, setAiRecipe] = useState(null)
   const [aiLoading, setAiLoading] = useState(false)
   const [aiError, setAiError] = useState(null)
+  const [savedRecipes, setSavedRecipes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('savedAiRecipes')) || [] } catch { return [] }
+  })
+  const [viewingSaved, setViewingSaved] = useState(null)
+
+  const saveAiRecipe = (recipe) => {
+    const exists = savedRecipes.some(r => r.name === recipe.name)
+    if (exists) return
+    const updated = [{ ...recipe, savedAt: Date.now() }, ...savedRecipes]
+    setSavedRecipes(updated)
+    localStorage.setItem('savedAiRecipes', JSON.stringify(updated))
+  }
+
+  const removeSavedRecipe = (index) => {
+    const updated = savedRecipes.filter((_, i) => i !== index)
+    setSavedRecipes(updated)
+    localStorage.setItem('savedAiRecipes', JSON.stringify(updated))
+    if (viewingSaved !== null) setViewingSaved(null)
+  }
 
   const generateAiRecipe = async () => {
     if (selectedSet.size === 0) return
@@ -316,8 +335,102 @@ export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan, on
         </div>
       )}
 
+      {/* Saved AI Recipes */}
+      {savedRecipes.length > 0 && !viewingSaved && (
+        <div className="saved-recipes-section">
+          <h2 className="saved-recipes-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+              <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+              <polyline points="17 21 17 13 7 13 7 21" />
+              <polyline points="7 3 7 8 15 8" />
+            </svg>
+            Saved AI Recipes ({savedRecipes.length})
+          </h2>
+          {savedRecipes.map((recipe, i) => (
+            <div key={i} className="saved-recipe-row" onClick={() => setViewingSaved(i)}>
+              <div className="saved-recipe-info">
+                <div className="ai-recipe-badge" style={{ marginBottom: 0 }}>AI Generated</div>
+                <div className="saved-recipe-name">{recipe.name}</div>
+                <div className="saved-recipe-meta">
+                  {recipe.prepTime + recipe.cookTime}m · {recipe.difficulty} · Serves {recipe.servings}
+                </div>
+              </div>
+              <button className="saved-recipe-delete" onClick={(e) => { e.stopPropagation(); removeSavedRecipe(i) }}>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                  <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Viewing a saved recipe */}
+      {viewingSaved !== null && savedRecipes[viewingSaved] && (() => {
+        const recipe = savedRecipes[viewingSaved]
+        return (
+          <div className="ai-recipe-card" style={{ margin: '16px 0' }}>
+            <button className="collection-back" onClick={() => setViewingSaved(null)} style={{ marginBottom: 12 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+                <polyline points="15 18 9 12 15 6" />
+              </svg>
+              Back to Fridge
+            </button>
+            <div className="ai-recipe-badge">AI Generated</div>
+            <h3 className="ai-recipe-name">{recipe.name}</h3>
+            {recipe.nameAr && <div className="ai-recipe-name-ar">{recipe.nameAr}</div>}
+            <p className="ai-recipe-desc">{recipe.description}</p>
+
+            <div className="ai-recipe-stats">
+              <span>⏱ Prep {recipe.prepTime}m</span>
+              <span>🔥 Cook {recipe.cookTime}m</span>
+              <span>👥 Serves {recipe.servings}</span>
+              <span>📊 {recipe.difficulty}</span>
+            </div>
+
+            <div className="ai-recipe-ingredients">
+              <h4>Ingredients</h4>
+              {recipe.ingredients?.map((ing, i) => (
+                <div key={i} className="ingredient-item">
+                  <span className="ingredient-name">{ing.name}</span>
+                  <span className="ingredient-amount">{ing.amount} {ing.unit}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="ai-recipe-instructions">
+              <h4>Instructions</h4>
+              {recipe.instructions?.map((step, i) => (
+                <div key={i} className="instruction-step">
+                  <div className="step-number">{i + 1}</div>
+                  <div className="step-text">
+                    <TimedText text={step} onStartTimer={onStartTimer} />
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {recipe.tips?.length > 0 && (
+              <div className="ai-recipe-tips">
+                <h4>Tips</h4>
+                {recipe.tips.map((tip, i) => (
+                  <div key={i} className="tip-item">{tip}</div>
+                ))}
+              </div>
+            )}
+
+            <button className="ai-save-btn delete" onClick={() => removeSavedRecipe(viewingSaved)} style={{ marginTop: 16 }}>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                <polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+              </svg>
+              Remove from Saved
+            </button>
+          </div>
+        )
+      })()}
+
       {/* AI Chef section */}
-      {selectedSet.size >= 2 && (
+      {selectedSet.size >= 2 && !viewingSaved && (
         <div className="ai-chef-section">
           <div className="ai-chef-header">
             <h2 className="ai-chef-title">
@@ -415,16 +528,41 @@ export default function FridgeCook({ onOpenRecipe, onAddToWeekly, weeklyPlan, on
                 </div>
               )}
 
-              <button className="ai-chef-btn" onClick={generateAiRecipe} disabled={aiLoading} style={{ marginTop: 16 }}>
-                {aiLoading ? 'Generating...' : '🔄 Generate Another'}
-              </button>
+              <div className="ai-recipe-actions">
+                <button
+                  className="ai-save-btn"
+                  onClick={() => saveAiRecipe(aiRecipe)}
+                  disabled={savedRecipes.some(r => r.name === aiRecipe.name)}
+                >
+                  {savedRecipes.some(r => r.name === aiRecipe.name) ? (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" width="16" height="16">
+                        <polyline points="20 6 9 17 4 12" />
+                      </svg>
+                      Saved
+                    </>
+                  ) : (
+                    <>
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16">
+                        <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+                        <polyline points="17 21 17 13 7 13 7 21" />
+                        <polyline points="7 3 7 8 15 8" />
+                      </svg>
+                      Save Recipe
+                    </>
+                  )}
+                </button>
+                <button className="ai-chef-btn" onClick={generateAiRecipe} disabled={aiLoading} style={{ flex: 1 }}>
+                  {aiLoading ? 'Generating...' : '🔄 Generate Another'}
+                </button>
+              </div>
             </div>
           )}
         </div>
       )}
 
       {/* Empty state */}
-      {selectedSet.size === 0 && (
+      {selectedSet.size === 0 && !viewingSaved && (
         <div className="fridge-empty">
           <div className="fridge-empty-icon">🍳</div>
           <p>Search or browse ingredients above to get started</p>
