@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react'
-import recipes, { categories, getCategoryGradient, getDietary } from '../data/recipes'
+import recipes, { categories, collections, getCategoryGradient, getDietary } from '../data/recipes'
 import RecipeCard from '../components/RecipeCard'
 
 const dietaryFilters = [
@@ -13,6 +13,7 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeDietary, setActiveDietary] = useState([])
+  const [activeCollection, setActiveCollection] = useState(null)
 
   const toggleDietary = (id) => {
     setActiveDietary(prev => prev.includes(id) ? prev.filter(d => d !== id) : [...prev, id])
@@ -23,8 +24,11 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
     return recentlyViewed.map(id => recipes.find(r => r.id === id)).filter(Boolean)
   }, [recentlyViewed])
 
+  const collectionObj = activeCollection ? collections.find(c => c.id === activeCollection) : null
+
   const filtered = useMemo(() => {
     return recipes.filter(r => {
+      if (collectionObj) return collectionObj.filter(r)
       const matchCat = activeCategory === 'all'
         || (activeCategory === 'favorites' ? favorites.includes(r.id) : r.category === activeCategory)
       const q = search.toLowerCase()
@@ -38,7 +42,7 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
       const matchDietary = activeDietary.length === 0 || activeDietary.every(d => dietary[d])
       return matchCat && matchSearch && matchDietary
     })
-  }, [search, activeCategory, favorites, activeDietary])
+  }, [search, activeCategory, favorites, activeDietary, collectionObj])
 
   const allCategories = [
     ...categories.slice(0, 1),
@@ -46,7 +50,7 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
     ...categories.slice(1),
   ]
 
-  const hasActiveFilters = search || activeCategory !== 'all' || activeDietary.length > 0
+  const hasActiveFilters = search || activeCategory !== 'all' || activeDietary.length > 0 || activeCollection
 
   return (
     <div className="page">
@@ -104,6 +108,44 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
           ))}
         </div>
       </div>
+
+      {/* Collections */}
+      {!search && !activeCollection && activeCategory === 'all' && activeDietary.length === 0 && (
+        <div className="collections-section">
+          <div className="collections-title">Collections</div>
+          <div className="collections-scroll">
+            {collections.map(col => (
+              <button
+                key={col.id}
+                className="collection-card"
+                onClick={() => setActiveCollection(col.id)}
+                style={{ background: col.gradient }}
+              >
+                <span className="collection-emoji">{col.emoji}</span>
+                <span className="collection-name">{col.title}</span>
+                <span className="collection-sub">{col.subtitle}</span>
+                <span className="collection-count">{recipes.filter(col.filter).length} recipes</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Active collection header */}
+      {activeCollection && collectionObj && (
+        <div className="collection-active-header">
+          <button className="collection-back" onClick={() => setActiveCollection(null)}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="18" height="18">
+              <polyline points="15 18 9 12 15 6" />
+            </svg>
+            All Collections
+          </button>
+          <div className="collection-active-title">
+            <span>{collectionObj.emoji}</span> {collectionObj.title}
+          </div>
+          <div className="collection-active-sub">{collectionObj.subtitle}</div>
+        </div>
+      )}
 
       {/* Recently Viewed */}
       {recentRecipes.length > 0 && !search && activeCategory === 'all' && activeDietary.length === 0 && (

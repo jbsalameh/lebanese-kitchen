@@ -28,6 +28,65 @@ export function getDietary(recipe) {
   }
 }
 
+export const collections = [
+  {
+    id: 'quick-weeknight',
+    title: 'Quick Weeknight',
+    subtitle: 'Ready in 30 minutes or less',
+    emoji: '⚡',
+    gradient: 'linear-gradient(135deg, #F59E0B, #EF4444)',
+    filter: (r) => (r.prepTime + r.cookTime) <= 35 && r.difficulty === 'easy',
+  },
+  {
+    id: 'comfort-food',
+    title: 'Comfort Classics',
+    subtitle: 'Hearty family favorites',
+    emoji: '🫕',
+    gradient: 'linear-gradient(135deg, #8B5CF6, #EC4899)',
+    filter: (r) => r.tags.some(t => ['family', 'traditional', 'comfort', 'slow-cook'].includes(t)),
+  },
+  {
+    id: 'summer-fresh',
+    title: 'Summer Fresh',
+    subtitle: 'Light, vibrant & no-cook',
+    emoji: '☀️',
+    gradient: 'linear-gradient(135deg, #10B981, #3B82F6)',
+    filter: (r) => r.tags.some(t => ['fresh', 'salad', 'vegan', 'healthy'].includes(t)) && r.category !== 'soup',
+  },
+  {
+    id: 'winter-warming',
+    title: 'Winter Warming',
+    subtitle: 'Soups, stews & slow cooks',
+    emoji: '🍲',
+    gradient: 'linear-gradient(135deg, #DC2626, #9333EA)',
+    filter: (r) => r.tags.some(t => ['warming', 'winter', 'slow-cook', 'braised', 'stew'].includes(t)) || r.category === 'soup',
+  },
+  {
+    id: 'festive-feast',
+    title: 'Festive Feast',
+    subtitle: 'Holiday & Ramadan specials',
+    emoji: '🌙',
+    gradient: 'linear-gradient(135deg, #C8873A, #1B4332)',
+    filter: (r) => r.tags.some(t => ['festive', 'ramadan', 'feast', 'iconic'].includes(t)),
+  },
+  {
+    id: 'mezze-spread',
+    title: 'Mezze Spread',
+    subtitle: 'Dips, bites & small plates',
+    emoji: '🫒',
+    gradient: 'linear-gradient(135deg, #059669, #0D9488)',
+    filter: (r) => r.tags.some(t => ['mezze', 'dip', 'snack'].includes(t)) || r.category === 'mezze',
+  },
+  {
+    id: 'budget-friendly',
+    title: 'Budget Friendly',
+    subtitle: 'Delicious on a dime',
+    emoji: '💰',
+    gradient: 'linear-gradient(135deg, #0EA5E9, #6366F1)',
+    filter: (r) => r.tags.some(t => ['budget', 'simple', 'everyday'].includes(t)),
+  },
+]
+
 export const categories = [
   { id: 'all', label: 'All', emoji: '🍽️' },
   { id: 'main', label: 'Mains', emoji: '🍖' },
