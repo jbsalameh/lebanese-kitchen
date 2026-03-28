@@ -2477,3 +2477,145 @@ body {
   color: #DC2626;
   background: #FEF2F2;
 }
+
+/* ── PWA: Offline Banner ── */
+.offline-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #7C3AED;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--font);
+  text-align: center;
+  animation: slideDown 0.3s ease;
+}
+
+.offline-banner svg { flex-shrink: 0; }
+
+@keyframes slideDown {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
+}
+
+/* ── PWA: Update Banner ── */
+.update-banner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 400;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 14px;
+  font-family: var(--font);
+  animation: slideDown 0.3s ease;
+}
+
+.update-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.update-btn {
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: none;
+  background: #fff;
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+.update-dismiss {
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.4);
+  background: transparent;
+  color: #fff;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+/* ── PWA: Install Prompt ── */
+.install-prompt {
+  position: fixed;
+  bottom: calc(var(--nav-height) + 12px);
+  left: 12px;
+  right: 12px;
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border);
+  animation: slideUp 0.4s ease;
+}
+
+.install-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.install-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.install-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.install-text strong {
+  font-size: 14px;
+  color: var(--text);
+  font-family: var(--font);
+}
+
+.install-text span {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-family: var(--font);
+}
+
+.install-btn {
+  padding: 8px 20px;
+  border-radius: 20px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  font-size: 13px;
+  font-family: var(--font);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

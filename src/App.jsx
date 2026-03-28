@@ -7,6 +7,8 @@ import CookingMode from './pages/CookingMode'
 import FridgeCook from './pages/FridgeCook'
 import BottomNav from './components/BottomNav'
 import TimerOverlay from './components/TimerOverlay'
+import { OfflineBanner, UpdateBanner, InstallPrompt } from './components/PWAPrompts'
+import { usePWA } from './hooks/usePWA'
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('gallery')
@@ -116,10 +118,14 @@ export default function App() {
     setCurrentPage('cooking')
   }
 
+  const { isOffline, needRefresh, installPrompt, doUpdate, doInstall, dismissUpdate } = usePWA()
+
   const showNav = currentPage !== 'recipe' && currentPage !== 'cooking'
 
   return (
     <div className="app">
+      <OfflineBanner isOffline={isOffline} />
+      <UpdateBanner needRefresh={needRefresh} onUpdate={doUpdate} onDismiss={dismissUpdate} />
       {currentPage === 'gallery' && (
         <Gallery
           weeklyPlan={weeklyPlan}
@@ -189,6 +195,7 @@ export default function App() {
         />
       )}
       <TimerOverlay timers={timers} onRemoveTimer={removeTimer} />
+      <InstallPrompt installPrompt={installPrompt} onInstall={doInstall} />
     </div>
   )
 }
