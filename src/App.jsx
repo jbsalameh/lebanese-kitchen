@@ -7,6 +7,7 @@ import CookingMode from './pages/CookingMode'
 import FridgeCook from './pages/FridgeCook'
 import BottomNav from './components/BottomNav'
 import TimerOverlay from './components/TimerOverlay'
+import AiRecipeDetail from './pages/AiRecipeDetail'
 import { OfflineBanner, UpdateBanner, InstallPrompt } from './components/PWAPrompts'
 import { usePWA } from './hooks/usePWA'
 import { useTheme } from './hooks/useTheme'
@@ -30,6 +31,10 @@ export default function App() {
   const [recentlyViewed, setRecentlyViewed] = useState(() => {
     try { return JSON.parse(localStorage.getItem('recentlyViewed')) || [] } catch { return [] }
   })
+  const [savedAiRecipes, setSavedAiRecipes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('savedAiRecipes')) || [] } catch { return [] }
+  })
+  const [selectedAiRecipe, setSelectedAiRecipe] = useState(null)
 
   useEffect(() => {
     localStorage.setItem('weeklyPlan', JSON.stringify(weeklyPlan))
@@ -50,6 +55,10 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('recentlyViewed', JSON.stringify(recentlyViewed))
   }, [recentlyViewed])
+
+  useEffect(() => {
+    localStorage.setItem('savedAiRecipes', JSON.stringify(savedAiRecipes))
+  }, [savedAiRecipes])
 
   const navigateTo = (page) => {
     setPageHistory(prev => [...prev, page])
@@ -113,6 +122,23 @@ export default function App() {
 
   const clearChecked = () => setCheckedItems({})
 
+  const saveAiRecipe = (recipe) => {
+    const exists = savedAiRecipes.some(r => r.name === recipe.name)
+    if (exists) return
+    setSavedAiRecipes(prev => [{ ...recipe, savedAt: Date.now() }, ...prev])
+  }
+
+  const removeAiRecipe = (index) => {
+    setSavedAiRecipes(prev => prev.filter((_, i) => i !== index))
+    if (currentPage === 'aiRecipe') goBack()
+  }
+
+  const openAiRecipe = (index) => {
+    setPageHistory(prev => [...prev, 'aiRecipe'])
+    setSelectedAiRecipe(index)
+    setCurrentPage('aiRecipe')
+  }
+
   const startCooking = (recipeId) => {
     setPageHistory(prev => [...prev, 'cooking'])
     setSelectedRecipeId(recipeId)
@@ -122,7 +148,7 @@ export default function App() {
   const { isOffline, needRefresh, installPrompt, doUpdate, doInstall, dismissUpdate } = usePWA()
   const { theme, toggleTheme } = useTheme()
 
-  const showNav = currentPage !== 'recipe' && currentPage !== 'cooking'
+  const showNav = currentPage !== 'recipe' && currentPage !== 'cooking' && currentPage !== 'aiRecipe'
 
   return (
     <div className="app">
@@ -139,6 +165,8 @@ export default function App() {
           onToggleFavorite={toggleFavorite}
           theme={theme}
           onToggleTheme={toggleTheme}
+          savedAiRecipes={savedAiRecipes}
+          onOpenAiRecipe={openAiRecipe}
         />
       )}
       {currentPage === 'weekly' && (
@@ -168,6 +196,8 @@ export default function App() {
           onAddToWeekly={addToWeekly}
           weeklyPlan={weeklyPlan}
           onStartTimer={addTimer}
+          savedAiRecipes={savedAiRecipes}
+          onSaveAiRecipe={saveAiRecipe}
         />
       )}
       {currentPage === 'recipe' && (
@@ -181,6 +211,15 @@ export default function App() {
           onToggleFavorite={toggleFavorite}
           onStartCooking={startCooking}
           onStartTimer={addTimer}
+          onBack={goBack}
+        />
+      )}
+      {currentPage === 'aiRecipe' && selectedAiRecipe !== null && savedAiRecipes[selectedAiRecipe] && (
+        <AiRecipeDetail
+          recipe={savedAiRecipes[selectedAiRecipe]}
+          index={selectedAiRecipe}
+          onStartTimer={addTimer}
+          onRemove={removeAiRecipe}
           onBack={goBack}
         />
       )}

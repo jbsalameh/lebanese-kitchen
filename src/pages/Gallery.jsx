@@ -9,7 +9,7 @@ const dietaryFilters = [
   { id: 'dairyFree', label: 'Dairy-Free', emoji: '🥛' },
 ]
 
-export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenRecipe, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, theme, onToggleTheme }) {
+export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenRecipe, onAddToWeekly, onRemoveFromWeekly, onToggleFavorite, theme, onToggleTheme, savedAiRecipes, onOpenAiRecipe }) {
   const [search, setSearch] = useState('')
   const [activeCategory, setActiveCategory] = useState('all')
   const [activeDietary, setActiveDietary] = useState([])
@@ -27,6 +27,7 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
   const collectionObj = activeCollection ? collections.find(c => c.id === activeCollection) : null
 
   const filtered = useMemo(() => {
+    if (activeCategory === 'myRecipes') return []
     return recipes.filter(r => {
       if (collectionObj) return collectionObj.filter(r)
       const matchCat = activeCategory === 'all'
@@ -47,6 +48,7 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
   const allCategories = [
     ...categories.slice(0, 1),
     { id: 'favorites', label: 'Favorites', emoji: '❤️' },
+    ...(savedAiRecipes?.length > 0 ? [{ id: 'myRecipes', label: 'My Recipes', emoji: '🤖' }] : []),
     ...categories.slice(1),
   ]
 
@@ -95,6 +97,9 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
               {cat.label}
               {cat.id === 'favorites' && favorites.length > 0 && (
                 <span className="chip-count">{favorites.length}</span>
+              )}
+              {cat.id === 'myRecipes' && savedAiRecipes?.length > 0 && (
+                <span className="chip-count">{savedAiRecipes.length}</span>
               )}
             </button>
           ))}
@@ -175,7 +180,57 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
         </div>
       )}
 
-      {filtered.length > 0 ? (
+      {/* My Recipes (saved AI recipes) */}
+      {activeCategory === 'myRecipes' && (
+        <>
+          {savedAiRecipes.length > 0 ? (
+            <>
+              <div className="results-count">
+                {savedAiRecipes.length} saved AI recipe{savedAiRecipes.length !== 1 ? 's' : ''}
+              </div>
+              <div className="recipe-grid">
+                {savedAiRecipes.map((recipe, i) => (
+                  <div key={i} className="recipe-card ai-recipe-card-grid" onClick={() => onOpenAiRecipe(i)}>
+                    <div className="card-img-wrap">
+                      <div
+                        className="card-gradient-bg"
+                        style={{ background: 'linear-gradient(135deg, #7C3AED, #EC4899)' }}
+                      >
+                        🤖
+                      </div>
+                      <div className="ai-card-badge">AI</div>
+                    </div>
+                    <div className="card-info">
+                      <div className="card-name">{recipe.name}</div>
+                      {recipe.nameAr && <div className="card-name-ar">{recipe.nameAr}</div>}
+                      <div className="card-meta">
+                        <span className="card-time">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                            <circle cx="12" cy="12" r="10" />
+                            <polyline points="12 6 12 12 16 14" />
+                          </svg>
+                          {recipe.prepTime + recipe.cookTime}m
+                        </span>
+                        <span className={`diff-badge diff-${recipe.difficulty}`}>
+                          {recipe.difficulty.charAt(0).toUpperCase() + recipe.difficulty.slice(1)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          ) : (
+            <div className="empty-results">
+              <div className="empty-results-icon">🤖</div>
+              <h3>No saved recipes</h3>
+              <p>Generate recipes with AI Chef in the Fridge tab and save them here</p>
+            </div>
+          )}
+        </>
+      )}
+
+      {activeCategory !== 'myRecipes' && filtered.length > 0 ? (
         <>
           {hasActiveFilters && (
             <div className="results-count">
@@ -201,13 +256,13 @@ export default function Gallery({ weeklyPlan, favorites, recentlyViewed, onOpenR
             ))}
           </div>
         </>
-      ) : (
+      ) : activeCategory !== 'myRecipes' ? (
         <div className="empty-results">
           <div className="empty-results-icon">{activeCategory === 'favorites' ? '❤️' : '🔍'}</div>
           <h3>{activeCategory === 'favorites' ? 'No favorites yet' : 'No recipes found'}</h3>
           <p>{activeCategory === 'favorites' ? 'Tap the heart on any recipe to save it here' : 'Try a different search or category'}</p>
         </div>
-      )}
+      ) : null}
     </div>
   )
 }
